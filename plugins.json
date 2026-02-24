@@ -7,7 +7,9 @@
   "betterncm_version": ">=1.2.0",
   "preview": "dist/preview.png",
   "slug": "RevivedUnblockInstaller",
-  "repo": "ReviveUnblockNCMInstaller/RevivedUnblockInstaller",
+  "update_time": "2026/02/24",
+  "publish_time": "2023/04/29",
+  "repo": "Endmoying/RevivedUnblockInstaller",
   "stars": 300,
   "file": "RevivedUnblockNeteaseMusic.plugin",
   "file-url": "RevivedUnblockNeteaseMusic.plugin"

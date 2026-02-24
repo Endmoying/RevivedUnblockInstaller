@@ -3,6 +3,15 @@ const { lessLoader } = require('esbuild-plugin-less');
 const fs = require('fs');
 const path = require('path');
 
+// 将时间戳转换为 yyyy/mm/dd 格式
+function timestampToDate(timestamp) {
+    const date = new Date(timestamp);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}/${month}/${day}`;
+}
+
 const isDev = process.argv.includes('--dev');
 
 const resources = ['manifest.json', 'preview.png'];
@@ -39,14 +48,18 @@ const copyFiles = (destDir) => {
         const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
         const version = packageData.version;
         
-        // 更新 plugins.json 中的版本信息和 update_time
+        // 更新 plugins.json 中的版本信息和时间格式
         const pluginsJsonPath = path.resolve(__dirname, 'plugins.json');
         if (fs.existsSync(pluginsJsonPath)) {
             const pluginData = JSON.parse(fs.readFileSync(pluginsJsonPath, 'utf8'));
             pluginData.version = version;
-            pluginData.update_time = Date.now();
+            pluginData.update_time = timestampToDate(Date.now());
+            // 如果 publish_time 存在且是数字（时间戳），也转换为日期格式
+            if (pluginData.publish_time && typeof pluginData.publish_time === 'number') {
+                pluginData.publish_time = timestampToDate(pluginData.publish_time);
+            }
             fs.writeFileSync(pluginsJsonPath, JSON.stringify(pluginData, null, 2));
-            console.log('Updated version and update_time in plugins.json');
+            console.log('Updated version and time format in plugins.json');
         }
         
         // 更新 manifest.json 中的版本信息
