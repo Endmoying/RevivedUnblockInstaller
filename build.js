@@ -48,16 +48,12 @@ const copyFiles = (destDir) => {
         const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
         const version = packageData.version;
         
-        // 更新 plugins.json 中的版本信息和时间格式
+        // 更新 plugins.json 中的版本信息和时间戳
         const pluginsJsonPath = path.resolve(__dirname, 'plugins.json');
         if (fs.existsSync(pluginsJsonPath)) {
             const pluginData = JSON.parse(fs.readFileSync(pluginsJsonPath, 'utf8'));
             pluginData.version = version;
-            pluginData.update_time = timestampToDate(Date.now());
-            // 如果 publish_time 存在且是数字（时间戳），也转换为日期格式
-            if (pluginData.publish_time && typeof pluginData.publish_time === 'number') {
-                pluginData.publish_time = timestampToDate(pluginData.publish_time);
-            }
+            pluginData.update_time = Date.now();
             fs.writeFileSync(pluginsJsonPath, JSON.stringify(pluginData, null, 2));
             console.log('Updated version and time format in plugins.json');
         }
