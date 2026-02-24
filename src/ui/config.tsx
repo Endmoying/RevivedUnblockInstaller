@@ -94,9 +94,9 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
             const versions = files.map(v => v.split(/\/|\\/g).pop()).filter((file) => {
                 return file.startsWith("UnblockNeteaseMusic-") && file.endsWith(".exe");
             }).map((file) => {
-                const v = file.replace("UnblockNeteaseMusic-", "").replace(".exe", "");
-                if (v === latestVersion.tag_name) return null;
-                return v;
+                return file.replace("UnblockNeteaseMusic-", "").replace(".exe", "");
+            }).filter(file => {
+                return file !== latestVersion.tag_name
             });
             setInstalledVersions(versions);
             
