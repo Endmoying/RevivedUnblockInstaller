@@ -86,16 +86,20 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
 
     React.useEffect(() => {
         !(async () => {
-
             const files = await betterncm.fs.readDir("./RevivedUnblockInstaller/");
+
+            const latestVersion = await fetch("https://api.github.com/repos/UnblockNeteaseMusic/server/releases/latest")
+                .then(v => v.json());
+
             const versions = files.map(v => v.split(/\/|\\/g).pop()).filter((file) => {
                 return file.startsWith("UnblockNeteaseMusic-") && file.endsWith(".exe");
             }).map((file) => {
-                return file.replace("UnblockNeteaseMusic-", "").replace(".exe", "");
+                const v = file.replace("UnblockNeteaseMusic-", "").replace(".exe", "");
+                if (v === latestVersion.tag_name) return null;
+                return v;
             });
             setInstalledVersions(versions);
-            const latestVersion = await fetch("https://api.github.com/repos/UnblockNeteaseMusic/server/releases/latest")
-                .then(v => v.json());
+            
 
             const asset = latestVersion.assets.find(asset => asset.name.includes("win-x64"));
 
@@ -112,7 +116,7 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
                 filename: `UnblockNeteaseMusic-${latestVersion.tag_name}-ghproxy.exe`,
                 onlineFileName: asset.name,
                 releaseDate: asset.created_at,
-                download_url: "https://mirror.ghproxy.com/" + asset.browser_download_url
+                download_url: "https://fastgit.cc/" + asset.browser_download_url
             }]);
         })()
     }, []);
@@ -233,8 +237,8 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
                         <OtherSetting config={config} />
                     </div>
                     <div className="note">注：你需要重启进程后配置才能生效</div>
-                    <div className="optionSubtitle">当前端口</div>
-                    <div style={{ padding: "10px", fontSize: "20px" }}>{config.getConfig("port", Math.round(Math.random() * 10000 + 10000))}</div>
+                    <div className="optionSubtitle note">当前端口</div>
+                    <div className="note" style={{ padding: "10px", fontSize: "20px" }}>{config.getConfig("port", Math.round(Math.random() * 10000 + 10000))}</div>
                     <div className="optionSubtitle">操作</div>
                     <button style={{ margin: "10px 5px" }} className="btn" onClick={() => switchWindowShow()}>切换窗口显隐</button>
                     <button style={{ margin: "10px 5px" }} className="btn" onClick={async () => {
@@ -245,14 +249,14 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
 
                 <div className="optionBlock">
                     <div className="optionTitle">其他</div>
-                    <div className="optionSubtitle">关于</div>
-                    <div style={{ padding: "10px", fontSize: "17px" }}>
+                    <div className="optionSubtitle note">关于</div>
+                    <div className="note" style={{ padding: "10px", fontSize: "17px" }}>
                         本插件资源仅供学习交流，严禁用于商业用途。<br />
                         歌曲版权归原作者所有，如有侵权请联系删除。<br />
                         本插件仅为安装器，不提供任何音乐资源。<br />
                         不建议进行大型宣发，传播。
                     </div>
-                    <div className="optionSubtitle">点点 Star ⭐</div>
+                    <div className="optionSubtitle note">点点 Star ⭐</div>
                     <button style={{ margin: "10px 5px" }} className="btn" onClick={() => betterncm.ncm.openUrl('https://github.com/UnblockNeteaseMusic/server')}>解灰源项目</button>
                     <button style={{ margin: "10px 5px" }} className="btn" onClick={() => betterncm.ncm.openUrl('https://github.com/ReviveUnblockNCMInstaller/RevivedUnblockInstaller')}>一键安装器（本项目）</button>
                 </div>
