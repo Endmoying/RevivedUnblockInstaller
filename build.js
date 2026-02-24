@@ -34,6 +34,29 @@ const copyFiles = (destDir) => {
             target: 'chrome91',
             plugins: [lessLoader()],
         });
+        // 读取 package.json 中的版本信息
+        const packageJsonPath = path.resolve(__dirname, 'package.json');
+        const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+        const version = packageData.version;
+        
+        // 更新 plugins.json 中的版本信息和 update_time
+        const pluginsJsonPath = path.resolve(__dirname, 'plugins.json');
+        if (fs.existsSync(pluginsJsonPath)) {
+            const pluginData = JSON.parse(fs.readFileSync(pluginsJsonPath, 'utf8'));
+            pluginData.version = version;
+            pluginData.update_time = Date.now();
+            fs.writeFileSync(pluginsJsonPath, JSON.stringify(pluginData, null, 2));
+            console.log('Updated version and update_time in plugins.json');
+        }
+        
+        // 更新 manifest.json 中的版本信息
+        const manifestJsonPath = path.resolve(__dirname, 'resources', 'manifest.json');
+        if (fs.existsSync(manifestJsonPath)) {
+            const manifestData = JSON.parse(fs.readFileSync(manifestJsonPath, 'utf8'));
+            manifestData.version = version;
+            fs.writeFileSync(manifestJsonPath, JSON.stringify(manifestData, null, 2));
+            console.log('Updated version in manifest.json');
+        }
         copyFiles('dist');
 
         const compress = require('compressing');
