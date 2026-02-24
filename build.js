@@ -48,14 +48,21 @@ const copyFiles = (destDir) => {
         const packageData = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
         const version = packageData.version;
         
-        // 更新 plugins.json 中的版本信息和时间戳
+        // 更新 plugins.json 中的版本信息和时间戳（10位）
         const pluginsJsonPath = path.resolve(__dirname, 'plugins.json');
         if (fs.existsSync(pluginsJsonPath)) {
             const pluginData = JSON.parse(fs.readFileSync(pluginsJsonPath, 'utf8'));
-            pluginData[0].version = version;
-            pluginData[0].update_time = Date.now();
+            // 检查是否为数组格式
+            const isArray = Array.isArray(pluginData);
+            const targetData = isArray ? pluginData[0] : pluginData;
+            
+            // 更新版本信息
+            targetData.version = version;
+            // 将毫秒级时间戳转换为秒级（10位）
+            targetData.update_time = Math.floor(Date.now() / 1000);
+            
             fs.writeFileSync(pluginsJsonPath, JSON.stringify(pluginData, null, 2));
-            console.log('Updated version and time format in plugins.json');
+            console.log('Updated version and timestamp format in plugins.json');
         }
         
         // 更新 manifest.json 中的版本信息
