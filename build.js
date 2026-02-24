@@ -52,8 +52,8 @@ const copyFiles = (destDir) => {
         const pluginsJsonPath = path.resolve(__dirname, 'plugins.json');
         if (fs.existsSync(pluginsJsonPath)) {
             const pluginData = JSON.parse(fs.readFileSync(pluginsJsonPath, 'utf8'));
-            pluginData.version = version;
-            pluginData.update_time = Date.now();
+            pluginData[0].version = version;
+            pluginData[0].update_time = Date.now();
             fs.writeFileSync(pluginsJsonPath, JSON.stringify(pluginData, null, 2));
             console.log('Updated version and time format in plugins.json');
         }
