@@ -175,7 +175,6 @@ export async function applyProxyConfig(expectedConfig: ProxyConfig, enableCertBy
 
 export async function checkAndExecuteUnblock(config: LocalJSONConfig) {
     config.setConfig("enabled", true);
-    config.setConfig("port", Math.round(Math.random() * 10000 + 10000));
     await config.write();
 
     const port = config.getConfig("port", Math.round(Math.random() * 10000 + 10000));
