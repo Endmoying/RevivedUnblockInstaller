@@ -96,7 +96,7 @@ export function Config({ config, stylesheet }: { config: LocalJSONConfig, styles
             }).map((file) => {
                 return file.replace("UnblockNeteaseMusic-", "").replace(".exe", "");
             }).filter(file => {
-                return file !== latestVersion.tag_name
+                return file !== latestVersion.tag_name || file !== latestVersion.tag_name + "-ghproxy";
             });
             setInstalledVersions(versions);
             
