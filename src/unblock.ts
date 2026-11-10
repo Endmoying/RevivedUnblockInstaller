@@ -71,7 +71,7 @@ function generateCommandLine(args: UNMArguments): string {
 
 export const startUNM = async (binaryPath: string, port: number, env: UNMEnvironmentVariables, visible: boolean = false, args: UNMArguments) => {
     args["port"] = `${port}:${port + 1}`;
-    const command = `cmd /c ${generateEnvironmentVariablesCommandLine(env)} && ${await betterncm.app.getDataPath()}${binaryPath} ${generateCommandLine(args)}`;
+    const command = `cmd /c (chcp 65001 >nul 2>&1)&& ${generateEnvironmentVariablesCommandLine(env)} && ${await betterncm.app.getDataPath()}${binaryPath} ${generateCommandLine(args)}`;
     console.log("Launching UNM: ", command, {
         visible,
         binaryPath,
